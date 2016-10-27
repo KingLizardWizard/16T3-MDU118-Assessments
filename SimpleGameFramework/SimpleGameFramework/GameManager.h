@@ -3,6 +3,7 @@
 #include "GameFramework.h"
 #include "GameObject.h"
 
+
 class GameManager
 {
 public:
@@ -32,6 +33,8 @@ public:
 private:
 	GameManager();
 	~GameManager();
+
+	std::vector<GameObject*> objects;
 };
 
 /**

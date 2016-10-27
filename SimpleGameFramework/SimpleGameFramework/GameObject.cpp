@@ -12,6 +12,11 @@ GameObject::~GameObject()
 {
 }
 
+void GameObject::Render(Gdiplus::Graphics& canvas, const CRect& clientRect)
+{
+
+}
+
 void GameObject::SaveAsText(std::ostream& outputStream)
 {
 	// Stores the values for each variable in a text document
@@ -20,7 +25,21 @@ void GameObject::SaveAsText(std::ostream& outputStream)
 					<< location.X << "," << location.Y << ","
 					<< imageName  << ","
 					<< rotation   << ","
-					<< xScale	  << "," << yScale << std::endl;
+					<< xScale	  << "," << yScale; 
+	
+	SaveAsText_Extra(outputStream);
+
+	outputStream	<< std::endl;
+}
+
+void GameObject::SaveAsText_Extra(std::ostream& outputStream)
+{
+
+}
+
+void GameObject::LoadFromText_Extra(std::istream& inputStream)
+{
+
 }
 
 void GameObject::LoadFromText(std::istream& inputStream)
@@ -54,4 +73,6 @@ void GameObject::LoadFromText(std::istream& inputStream)
 	inputStream >> xScale;
 	inputStream >> dummyValue;
 	inputStream >> yScale;
+
+	LoadFromText_Extra(inputStream);
 }

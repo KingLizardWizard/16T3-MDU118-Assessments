@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameManager.h"
+#include "Rock.h"
 #include <fstream>
 
 GameManager& GameManager::Instance()
@@ -17,39 +18,78 @@ GameManager::~GameManager()
 {
 }
 
-//const char* Image1 = "Image1";
-const char* Rock = "Rock";
+const char* RockImage = "RockImage";
 
 
 void GameManager::BeginPlay()
 {
 	// Load the image file Untitled.png from the Images folder. Give it the unique name of Image1
-	//GameFrameworkInstance.LoadImageResource(AppConfigInstance.GetResourcePath("Images/Untitled.png"), Image1);
-	GameFrameworkInstance.LoadImageResource(AppConfigInstance.GetResourcePath("Images/Rock.jpg"), Rock);
+	GameFrameworkInstance.LoadImageResource(AppConfigInstance.GetResourcePath("Images/Rock.jpg"), RockImage);
 
-	GameObject Rock_Setup;
-	Rock_Setup.type = egotWall;
-	Rock_Setup.location = Vector2i(30, 120);
-	Rock_Setup.name = "Rock";
-	Rock_Setup.rotation = 1.0f;
-	Rock_Setup.xScale = 3.0f;
-	Rock_Setup.yScale = 3.0f;
-	Rock_Setup.imageName = "Rock";
+	Rock* Rock_Setup = new Rock;
+	Rock_Setup->type = egotWall;
+	Rock_Setup->location = Vector2i(20, 20);
+	Rock_Setup->name = "Rock";
+	Rock_Setup->rotation = 1.0f;
+	Rock_Setup->xScale = 3.0f;
+	Rock_Setup->yScale = 3.0f;
+	Rock_Setup->imageName = "RockImage";
+	Rock_Setup->destructible = true;
 
 	std::ofstream outputFile("objects.csv");
-	Rock_Setup.SaveAsText(outputFile);
+	outputFile << 2 << std::endl;
+	outputFile << 1 << std::endl;
+	Rock_Setup->SaveAsText(outputFile);
 	outputFile.close();
 
-	std::ifstream inputFile("objects.csv");
-	GameObject Rock;
-	Rock.LoadFromText(inputFile);
+	delete Rock_Setup;
 
-	DebugLog("-----");
+	std::ifstream inputFile("objects.csv");
+	int versionNumber = 0;
+	int numObjects = 0;
+	inputFile >> versionNumber;
+	inputFile >> numObjects;
+
+	objects.reserve(numObjects);
+	for (int index = 0; index < numObjects; ++index)
+	{
+		int typeValue;
+		inputFile >> typeValue;
+		GameObjectType type = (GameObjectType)typeValue;
+
+		GameObject* loadedObjectPtr = nullptr;
+		switch (type)
+		{
+		case egotBase:
+			DebugLog("Object has base type. Something is very bad!");
+			break;
+
+		case egotWall:
+			loadedObjectPtr = new Rock();
+			break;
+		}
+		loadedObjectPtr->LoadFromText(inputFile);
+
+		objects.push_back(loadedObjectPtr);
+	}
+
+	Rock* rock1 = new Rock();
+
+	delete rock1;
 }
 
 void GameManager::EndPlay()
 {
+	// iterate over all of the game objects in the list
+	std::vector<GameObject*>::iterator objectIt;
+	for (objectIt = objects.begin(); objectIt != objects.end(); ++objectIt)
+	{
+		GameObject* objectPtr = *objectIt;
+		delete objectPtr;
+	}
 
+	// clear the vector (empty the elements)
+	objects.clear();
 }
 
 void GameManager::Update(double deltaTime)
@@ -62,10 +102,6 @@ void GameManager::Render(Gdiplus::Graphics& canvas, const CRect& clientRect)
 	/*
 	////////////////////////////////////////////////////////////////////////////////
 	// Begin example code
-
-	// Save the current transformation of the scene
-	Gdiplus::Matrix transform;
-	canvas.GetTransform(&transform);
 
 	canvas.ScaleTransform(0.5f, 0.5f);
 	canvas.RotateTransform(30.0f);
@@ -84,10 +120,6 @@ void GameManager::Render(Gdiplus::Graphics& canvas, const CRect& clientRect)
 
 	GameFrameworkInstance.DrawText(canvas, Vector2i(10, 300), 12, "Arial", "Hello World!", Gdiplus::Color::White);
 
-	// Load the image file Untitled.png from the Images folder. Give it the unique name of Image1
-	ImageWrapper* image1 = GameFrameworkInstance.GetLoadedImage(Image1);
-	GameFrameworkInstance.DrawImage(canvas, Vector2i(400, 400), image1);
-
 	// Restore the transformation of the scene
 	canvas.SetTransform(&transform);
 
@@ -95,6 +127,23 @@ void GameManager::Render(Gdiplus::Graphics& canvas, const CRect& clientRect)
 	////////////////////////////////////////////////////////////////////////////////
 	*/
 
-	ImageWrapper* rock = GameFrameworkInstance.GetLoadedImage(Rock);
-	GameFrameworkInstance.DrawImage(canvas, Vector2i(200, 200), rock);
+	// Save the current transformation of the scene
+	Gdiplus::Matrix transform;
+	canvas.GetTransform(&transform);
+
+	canvas.ScaleTransform(0.5f, 0.5f);
+	canvas.RotateTransform(30.0f);
+	canvas.TranslateTransform(200.0f, 200.0f);
+
+	// tell all of the game objects to render
+	for (GameObject* objectPtr : objects)
+	{
+		objectPtr->Render(canvas, clientRect);
+	}
+
+	// Restore the transformation of the scene
+	canvas.SetTransform(&transform);
+
+	//ImageWrapper* rockImage = GameFrameworkInstance.GetLoadedImage(RockImage);
+    //GameFrameworkInstance.DrawImage(canvas, Vector2i(rock.location.x, 200), rockImage);
 }
