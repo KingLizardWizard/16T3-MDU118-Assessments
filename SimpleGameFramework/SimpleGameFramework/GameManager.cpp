@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameManager.h"
+#include <fstream>
 
 GameManager& GameManager::Instance()
 {
@@ -20,14 +21,21 @@ const char* Image1 = "Image1";
 
 void GameManager::BeginPlay()
 {
-	////////////////////////////////////////////////////////////////////////////////
-	// Begin example code
-
 	// Load the image file Untitled.png from the Images folder. Give it the unique name of Image1
 	GameFrameworkInstance.LoadImageResource(AppConfigInstance.GetResourcePath("Images/Untitled.png"), Image1);
 
-	// End example code
-	////////////////////////////////////////////////////////////////////////////////
+	GameObject CarboardBox;
+	CarboardBox.type = egotWall;
+	CarboardBox.location = Vector2i(30, 120);
+	CarboardBox.name = "CardboardBox";
+	CarboardBox.rotation = 1.0f;
+	CarboardBox.xScale = 3.0f;
+	CarboardBox.yScale = 3.0f;
+	CarboardBox.imageName = "CardboardBox";
+
+	std::ofstream outputFile("objects.csv");
+	CarboardBox.SaveAsText(outputFile);
+	outputFile.close();
 }
 
 void GameManager::EndPlay()
