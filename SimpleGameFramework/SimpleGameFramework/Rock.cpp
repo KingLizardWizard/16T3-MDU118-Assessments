@@ -8,11 +8,14 @@ Rock::Rock() :
 	type = egotWall;
 }
 
-
 Rock::~Rock()
 {
 }
 
+void Rock::Render(Gdiplus::Graphics& canvas, const CRect& clientRect)
+{
+	GameFrameworkInstance.DrawCircle(canvas, location, 50, true, Gdiplus::Color::SaddleBrown);		
+}
 
 void Rock::SaveAsText_Extra(std::ostream& outputStream)
 {
@@ -24,18 +27,3 @@ void Rock::LoadFromText_Extra(std::istream& inputStream)
 	char dummyChar;
 	inputStream >> dummyChar >> destructible;
 }
-
-void Rock::Render(Gdiplus::Graphics& canvas, const CRect& clientRect)
-{
-	// Save the current transformation of the scene
-	Gdiplus::Matrix transform;
-	canvas.GetTransform(&transform);
-
-	canvas.TranslateTransform((float)location.X, (float)location.Y);
-
-	GameFrameworkInstance.DrawRectangle(canvas, AABBi(Vector2i(-5, -5), Vector2i(5, 5)), true, Gdiplus::Color::Bisque);
-
-	// Restore the transformation of the scene
-	canvas.SetTransform(&transform);
-}
-

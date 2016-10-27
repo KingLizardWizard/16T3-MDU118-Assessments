@@ -19,7 +19,18 @@ public:
 	virtual void SaveAsText(std::ostream& outputStream);
 	virtual void LoadFromText(std::istream& inputStream);
 
-	void Render(Gdiplus::Graphics& canvas, const CRect& clientRect);
+	virtual void Render(Gdiplus::Graphics& canvas, const CRect& clientRect);
+
+	bool operator == (const GameObject& rhs)
+	{
+		return (type == rhs.type) &&
+			(location == rhs.location);
+	}
+
+	bool operator != (const GameObject& rhs)
+	{
+		return !(*this == rhs);
+	}
 
 protected:
 	virtual void SaveAsText_Extra(std::ostream& outputStream);
