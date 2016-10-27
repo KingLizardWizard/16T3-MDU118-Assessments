@@ -17,6 +17,7 @@ public:
 	virtual ~GameObject();
 
 	virtual void SaveAsText(std::ostream& outputStream);
+	virtual void LoadFromText(std::istream& inputStream);
 
 public:
 	// Creates all of the base variables

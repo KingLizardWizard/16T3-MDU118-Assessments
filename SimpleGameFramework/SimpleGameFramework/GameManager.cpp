@@ -17,25 +17,34 @@ GameManager::~GameManager()
 {
 }
 
-const char* Image1 = "Image1";
+//const char* Image1 = "Image1";
+const char* Rock = "Rock";
+
 
 void GameManager::BeginPlay()
 {
 	// Load the image file Untitled.png from the Images folder. Give it the unique name of Image1
-	GameFrameworkInstance.LoadImageResource(AppConfigInstance.GetResourcePath("Images/Untitled.png"), Image1);
+	//GameFrameworkInstance.LoadImageResource(AppConfigInstance.GetResourcePath("Images/Untitled.png"), Image1);
+	GameFrameworkInstance.LoadImageResource(AppConfigInstance.GetResourcePath("Images/Rock.jpg"), Rock);
 
-	GameObject CarboardBox;
-	CarboardBox.type = egotWall;
-	CarboardBox.location = Vector2i(30, 120);
-	CarboardBox.name = "CardboardBox";
-	CarboardBox.rotation = 1.0f;
-	CarboardBox.xScale = 3.0f;
-	CarboardBox.yScale = 3.0f;
-	CarboardBox.imageName = "CardboardBox";
+	GameObject Rock_Setup;
+	Rock_Setup.type = egotWall;
+	Rock_Setup.location = Vector2i(30, 120);
+	Rock_Setup.name = "Rock";
+	Rock_Setup.rotation = 1.0f;
+	Rock_Setup.xScale = 3.0f;
+	Rock_Setup.yScale = 3.0f;
+	Rock_Setup.imageName = "Rock";
 
 	std::ofstream outputFile("objects.csv");
-	CarboardBox.SaveAsText(outputFile);
+	Rock_Setup.SaveAsText(outputFile);
 	outputFile.close();
+
+	std::ifstream inputFile("objects.csv");
+	GameObject Rock;
+	Rock.LoadFromText(inputFile);
+
+	DebugLog("-----");
 }
 
 void GameManager::EndPlay()
@@ -50,6 +59,7 @@ void GameManager::Update(double deltaTime)
 
 void GameManager::Render(Gdiplus::Graphics& canvas, const CRect& clientRect)
 {
+	/*
 	////////////////////////////////////////////////////////////////////////////////
 	// Begin example code
 
@@ -83,4 +93,8 @@ void GameManager::Render(Gdiplus::Graphics& canvas, const CRect& clientRect)
 
 	// End example code
 	////////////////////////////////////////////////////////////////////////////////
+	*/
+
+	ImageWrapper* rock = GameFrameworkInstance.GetLoadedImage(Rock);
+	GameFrameworkInstance.DrawImage(canvas, Vector2i(200, 200), rock);
 }
