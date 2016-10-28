@@ -7,6 +7,12 @@ enum GameObjectType {
 	egotBase,
 	egotRock,
 	egotBarrel,
+	egotHealingMist,
+	egotFire,
+	egotPickaxe,
+	egotMedkit,
+	egotArrowTrap,
+	egotCaveBat,
 
 	egotNumTypes
 };

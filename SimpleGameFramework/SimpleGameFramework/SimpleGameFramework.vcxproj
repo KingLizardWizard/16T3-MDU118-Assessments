@@ -109,15 +109,21 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="AppConfig.h" />
+    <ClInclude Include="ArrowTrap.h" />
     <ClInclude Include="Barrel.h" />
+    <ClInclude Include="CaveBat.h" />
     <ClInclude Include="CGameFrameworkApp.h" />
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="CPUUtils.h" />
+    <ClInclude Include="Fire.h" />
     <ClInclude Include="GameFramework.h" />
     <ClInclude Include="GameInput.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="HealingMist.h" />
     <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="Medkit.h" />
+    <ClInclude Include="Pickaxe.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Rock.h" />
     <ClInclude Include="stdafx.h" />
@@ -127,15 +133,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppConfig.cpp" />
+    <ClCompile Include="ArrowTrap.cpp" />
     <ClCompile Include="Barrel.cpp" />
+    <ClCompile Include="CaveBat.cpp" />
     <ClCompile Include="CGameFrameworkApp.cpp" />
     <ClCompile Include="ChildView.cpp" />
     <ClCompile Include="CPUUtils.cpp" />
+    <ClCompile Include="Fire.cpp" />
     <ClCompile Include="GameFramework.cpp" />
     <ClCompile Include="GameInput.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="HealingMist.cpp" />
     <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="Medkit.cpp" />
+    <ClCompile Include="Pickaxe.cpp" />
     <ClCompile Include="Rock.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
