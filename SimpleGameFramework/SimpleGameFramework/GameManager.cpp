@@ -8,6 +8,7 @@
 #include "Medkit.h"
 #include "ArrowTrap.h"
 #include "CaveBat.h"
+#include "Player.h"
 #include <fstream>
 
 GameManager& GameManager::Instance()
@@ -25,12 +26,26 @@ GameManager::~GameManager()
 {
 }
 
-const char* rockImage = "RockImage";
+const char* rockImage1 = "RockImage1";
 
 void GameManager::BeginPlay()
 {
 	//Load all of the images from the Images Directory and set names to them
-	GameFrameworkInstance.LoadImageResource(AppConfigInstance.GetResourcePath("Images/Rock.jpg"), rockImage);
+	GameFrameworkInstance.LoadImageResource(AppConfigInstance.GetResourcePath("Images/Rock.gif"), "RockImage");
+
+	//Input for the Player Object
+	Player* player1 = new Player;
+	player1->type = egotPlayer;
+	player1->location = Vector2i(1200, 700);
+	player1->name = "Player";
+	player1->rotation = 1.0f;
+	player1->xScale = 3.0f;
+	player1->yScale = 3.0f;
+	player1->imageName = "PlayerImage";
+	player1->health = 100;
+	player1->moveSpeed = 5;
+	player1->fireRate = 1;
+	player1->damage = 10;
 
 	//Input for the Rock Object
 	Rock* rock1 = new Rock;
@@ -124,14 +139,28 @@ void GameManager::BeginPlay()
 	caveBat1->health = 15;
 	caveBat1->damage = 10;
 
+	//Input for the CaveBat Object
+	CaveBat* caveBat2 = new CaveBat;
+	caveBat2->type = egotCaveBat;
+	caveBat2->location = Vector2i(900, 800);
+	caveBat2->name = "CaveBat";
+	caveBat2->rotation = 1.0f;
+	caveBat2->xScale = 3.0f;
+	caveBat2->yScale = 3.0f;
+	caveBat2->imageName = "CaveBatImage";
+	caveBat2->health = 15;
+	caveBat2->damage = 10;
+
 	std::ofstream outputFile("objects.csv");
 
 	//Version Number
-	outputFile << 3 << std::endl;
+	outputFile << 4 << std::endl;
 
 	//Number of Objects
-	outputFile << 8 << std::endl;
+	outputFile << 10 << std::endl;
 
+	//Save all of the objects to a textfile
+	player1->SaveAsText(outputFile);
 	rock1->SaveAsText(outputFile);
 	barrel1->SaveAsText(outputFile);
 	healingMist1->SaveAsText(outputFile);
@@ -140,8 +169,11 @@ void GameManager::BeginPlay()
 	medkit1->SaveAsText(outputFile);
 	arrowTrap1->SaveAsText(outputFile);
 	caveBat1->SaveAsText(outputFile);
+	caveBat2->SaveAsText(outputFile);
 	outputFile.close();
 
+	//Free up memory by deleting the unneeded objects
+	delete player1;
 	delete rock1;
 	delete barrel1;
 	delete healingMist1;
@@ -150,27 +182,28 @@ void GameManager::BeginPlay()
 	delete medkit1;
 	delete arrowTrap1;
 	delete caveBat1;
+	delete caveBat2;
 
 	std::ifstream inputFile("objects.csv");
-	int versionNumber = 3;
-	int numObjects = 8;
+	int versionNumber = 4;
+	int numObjects = 10;
 	inputFile >> versionNumber;
 	inputFile >> numObjects;
 
-	// load all of the objects
+	//Load in all of the objects into a loop
 	objects.reserve(numObjects);
 	for (int index = 0; index < numObjects; ++index)
 	{
-		// read the enumeration into a integer then cast/convert it to the enum
 		int typeValue;
 		inputFile >> typeValue;
 		GameObjectType type = (GameObjectType)typeValue;
 
+		//Read the enumeration into a integer and then cast it to the specific enum
 		GameObject* loadedObjectPtr = nullptr;
 		switch (type)
 		{
 		case egotBase:
-			DebugLog("Object has base type. Something is very bad!");
+			DebugLog("Error - Object has base type");
 			break;
 
 		case egotRock:
@@ -204,8 +237,13 @@ void GameManager::BeginPlay()
 		case egotCaveBat:
 			loadedObjectPtr = new CaveBat();
 			break;
+
+		case egotPlayer:
+			loadedObjectPtr = new Player();
+			break;
 		}
 
+		//Load the correct object type from the text file
 		loadedObjectPtr->LoadFromText(inputFile);
 
 		objects.push_back(loadedObjectPtr);
@@ -239,7 +277,6 @@ void GameManager::Render(Gdiplus::Graphics& canvas, const CRect& clientRect)
 
 	canvas.ScaleTransform(0.5f, 0.5f);
 	canvas.RotateTransform(0.0f);
-	//canvas.TranslateTransform(100.0f, 200.0f);
 
 	//Tell all of the GameObjects to render (includes children)
 	for (GameObject* objectPtr : objects)
@@ -250,6 +287,12 @@ void GameManager::Render(Gdiplus::Graphics& canvas, const CRect& clientRect)
 	//Restore transformation of scene
 	canvas.SetTransform(&transform);
 
-	ImageWrapper* rockImage1 = GameFrameworkInstance.GetLoadedImage(rockImage);
-    GameFrameworkInstance.DrawImage(canvas, Vector2i(100, 200), rockImage1);
+	//Set the scale of the Rock image
+	canvas.ScaleTransform(0.5f, 0.5f);
+
+	ImageWrapper* rockImage1 = GameFrameworkInstance.GetLoadedImage("RockImage");
+	GameFrameworkInstance.DrawImage(canvas, Vector2i(100, 200), rockImage1);
+
+	//Restore transformation of scene
+	canvas.SetTransform(&transform);
 }

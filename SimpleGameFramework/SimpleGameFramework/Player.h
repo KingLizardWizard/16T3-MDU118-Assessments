@@ -1,11 +1,11 @@
 #pragma once
 #include "GameObject.h"
-class HealingMist :
+class Player :
 	public GameObject
 {
 public:
-	HealingMist();
-	virtual ~HealingMist();
+	Player();
+	virtual ~Player();
 
 	void Render(Gdiplus::Graphics& canvas, const CRect& clientRect);
 
@@ -26,6 +26,9 @@ protected:
 
 	//Object specific variables
 public:
-	int healingAmount;
+	int health;
+	int moveSpeed;
+	int fireRate;
+	int damage;
 };
 

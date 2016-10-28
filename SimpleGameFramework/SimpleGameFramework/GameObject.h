@@ -13,6 +13,7 @@ enum GameObjectType {
 	egotMedkit,
 	egotArrowTrap,
 	egotCaveBat,
+	egotPlayer,
 
 	egotNumTypes
 };

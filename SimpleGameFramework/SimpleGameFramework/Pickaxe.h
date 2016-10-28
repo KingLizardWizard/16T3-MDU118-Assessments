@@ -24,6 +24,7 @@ protected:
 	virtual void SaveAsText_Extra(std::ostream& outputStream);
 	virtual void LoadFromText_Extra(std::istream& inputStream);
 
+	//Object specific variables
 public:
 	int durability;
 	int maxAmount;
