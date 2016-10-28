@@ -1,11 +1,10 @@
 #include "stdafx.h"
 #include "Rock.h"
 
-
 Rock::Rock() :
 	GameObject()
 {
-	type = egotWall;
+	type = egotRock;
 }
 
 Rock::~Rock()

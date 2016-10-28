@@ -1,12 +1,10 @@
 #include "stdafx.h"
 #include "GameObject.h"
 
-
 GameObject::GameObject()
 {
 	type = egotBase;
 }
-
 
 GameObject::~GameObject()
 {
@@ -44,11 +42,6 @@ void GameObject::LoadFromText_Extra(std::istream& inputStream)
 
 void GameObject::LoadFromText(std::istream& inputStream)
 {
-	//Convert Enumeration into an integer then cast it to the enum
-	int typeValue;
-	inputStream >> typeValue;
-	type = (GameObjectType)typeValue;
-
 	char dummyValue;
 	//Ignore the comma
 	inputStream >> dummyValue;

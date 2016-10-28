@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameManager.h"
 #include "Rock.h"
+#include "Barrel.h"
 #include <fstream>
 
 GameManager& GameManager::Instance()
@@ -18,17 +19,19 @@ GameManager::~GameManager()
 {
 }
 
-const char* RockImage = "RockImage";
+const char* rockImage = "RockImage";
+const char* barrelImage = "BarrelImage";
 
 
 void GameManager::BeginPlay()
 {
 	//Load all of the images from the Images Directory and set names to them
-	GameFrameworkInstance.LoadImageResource(AppConfigInstance.GetResourcePath("Images/Rock.jpg"), RockImage);
+	GameFrameworkInstance.LoadImageResource(AppConfigInstance.GetResourcePath("Images/Rock.jpg"), rockImage);
+	GameFrameworkInstance.LoadImageResource(AppConfigInstance.GetResourcePath("Images/Barrel.jpg"), barrelImage);
 
 	//Input for the Rock Object
 	Rock* rock1 = new Rock;
-	rock1->type = egotWall;
+	rock1->type = egotRock;
 	rock1->location = Vector2i(600, 300);
 	rock1->name = "Rock";
 	rock1->rotation = 1.0f;
@@ -37,32 +40,66 @@ void GameManager::BeginPlay()
 	rock1->imageName = "RockImage";
 	rock1->destructible = true;
 
+	//Input for the Barrel Object
+	Barrel* barrel1 = new Barrel;
+	barrel1->type = egotBarrel;
+	barrel1->location = Vector2i(900, 300);
+	barrel1->name = "Barrel";
+	barrel1->rotation = 1.0f;
+	barrel1->xScale = 3.0f;
+	barrel1->yScale = 3.0f;
+	barrel1->imageName = "BarrelImage";
+	barrel1->destructible = false;
+
 	std::ofstream outputFile("objects.csv");
 
 	//Version Number
 	outputFile << 2 << std::endl;
 
 	//Number of Objects
-	outputFile << 1 << std::endl;
+	outputFile << 2 << std::endl;
 
 	rock1->SaveAsText(outputFile);
+	barrel1->SaveAsText(outputFile);
 	outputFile.close();
 
 	delete rock1;
+	delete barrel1;
 
 	std::ifstream inputFile("objects.csv");
-	int versionNumber = 0;
-	int numObjects = 1;
+	int versionNumber = 3;
+	int numObjects = 2;
 	inputFile >> versionNumber;
 	inputFile >> numObjects;
 
+	// load all of the objects
 	objects.reserve(numObjects);
 	for (int index = 0; index < numObjects; ++index)
 	{
-		Rock* rock2 = new Rock();
-		rock2->LoadFromText(inputFile);
+		// read the enumeration into a integer then cast/convert it to the enum
+		int typeValue;
+		inputFile >> typeValue;
+		GameObjectType type = (GameObjectType)typeValue;
 
-		objects.push_back(rock2);
+		GameObject* loadedObjectPtr = nullptr;
+		switch (type)
+		{
+		case egotBase:
+			DebugLog("Object has base type. Something is very bad!");
+			break;
+
+		case egotRock:
+			loadedObjectPtr = new Rock();
+			break;
+
+		case egotBarrel:
+			loadedObjectPtr = new Barrel();
+			break;
+		}
+
+		loadedObjectPtr->LoadFromText(inputFile);
+
+		objects.push_back(loadedObjectPtr);
 	}
 }
 

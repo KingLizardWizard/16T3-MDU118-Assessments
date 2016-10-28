@@ -5,7 +5,8 @@
 
 enum GameObjectType {
 	egotBase,
-	egotWall,
+	egotRock,
+	egotBarrel,
 
 	egotNumTypes
 };
