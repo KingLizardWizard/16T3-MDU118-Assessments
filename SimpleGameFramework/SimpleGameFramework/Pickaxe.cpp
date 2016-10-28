@@ -13,6 +13,7 @@ Pickaxe::~Pickaxe()
 
 void Pickaxe::Render(Gdiplus::Graphics& canvas, const CRect& clientRect)
 {
+	GameFrameworkInstance.DrawText(canvas, Vector2i(location.X - 55, location.Y - 70), 16, "Arial", "Pickaxe", Gdiplus::Color::White);
 	GameFrameworkInstance.DrawCircle(canvas, location, 30, true, Gdiplus::Color::LightCyan);
 }
 

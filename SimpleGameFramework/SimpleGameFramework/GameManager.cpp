@@ -26,14 +26,11 @@ GameManager::~GameManager()
 }
 
 const char* rockImage = "RockImage";
-const char* barrelImage = "BarrelImage";
-
 
 void GameManager::BeginPlay()
 {
 	//Load all of the images from the Images Directory and set names to them
 	GameFrameworkInstance.LoadImageResource(AppConfigInstance.GetResourcePath("Images/Rock.jpg"), rockImage);
-	GameFrameworkInstance.LoadImageResource(AppConfigInstance.GetResourcePath("Images/Barrel.jpg"), barrelImage);
 
 	//Input for the Rock Object
 	Rock* rock1 = new Rock;
@@ -253,6 +250,6 @@ void GameManager::Render(Gdiplus::Graphics& canvas, const CRect& clientRect)
 	//Restore transformation of scene
 	canvas.SetTransform(&transform);
 
-	//ImageWrapper* rockImage = GameFrameworkInstance.GetLoadedImage(RockImage);
-    //GameFrameworkInstance.DrawImage(canvas, Vector2i(rock.location.x, 200), rockImage);
+	ImageWrapper* rockImage1 = GameFrameworkInstance.GetLoadedImage(rockImage);
+    GameFrameworkInstance.DrawImage(canvas, Vector2i(100, 200), rockImage1);
 }

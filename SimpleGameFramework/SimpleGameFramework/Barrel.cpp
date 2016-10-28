@@ -13,6 +13,7 @@ Barrel::~Barrel()
 
 void Barrel::Render(Gdiplus::Graphics& canvas, const CRect& clientRect)
 {
+	GameFrameworkInstance.DrawText(canvas, Vector2i(location.X - 55, location.Y - 100), 16, "Arial", "Barrel", Gdiplus::Color::White);
 	GameFrameworkInstance.DrawCircle(canvas, location, 65, true, Gdiplus::Color::Blue);
 }
 
