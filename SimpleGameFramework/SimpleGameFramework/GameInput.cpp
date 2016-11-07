@@ -27,21 +27,32 @@ void GameInput::EndPlay()
 
 }
 
+//Use for smooth movement (not tile based)
+int smoothAxisH = 0;
+int smoothAxisV = 0;
+int tileAxisH = 0;
+int tileAxisV = 0;
 void GameInput::Update(double deltaTime)
 {
 	// The code below polls individual keys to determine if they are currently down.
 	if (GetKeyState('W') & 0x8000)
 	{
+		--smoothAxisV;
 	}
 	if (GetKeyState('A') & 0x8000)
 	{
+		--smoothAxisH;
 	}
 	if (GetKeyState('S') & 0x8000)
 	{
+		++smoothAxisV;
 	}
 	if (GetKeyState('D') & 0x8000)
 	{
+		++smoothAxisH;
 	}
+
+	GameManagerInstance.PlayerInputSmooth(smoothAxisH, smoothAxisV);
 }
 
 void GameInput::OnKeyDown(UINT keyCode, UINT repeatCount)
@@ -49,7 +60,6 @@ void GameInput::OnKeyDown(UINT keyCode, UINT repeatCount)
 	// NOTE: This method will not detect multiple simultaneous key presses.
 	// To detect simultaneous presses you must use GetKeyState and check
 	// each key of interest.
-
 	switch (keyCode)
 	{
 	case 'W':
@@ -64,7 +74,27 @@ void GameInput::OnKeyDown(UINT keyCode, UINT repeatCount)
 		break;
 	case 'E':
 		break;
+	case 'Y':
+		tileAxisV -= 30;
+		break;
+	case 'G':
+		tileAxisH -= 30;
+		break;
+	case 'H':
+		tileAxisV += 30;
+		break;
+	case 'J':
+		tileAxisH += 30;
+		break;
 	case 'F':
+		if (GameManagerInstance.editMode == false)
+		{
+			GameManagerInstance.editMode = true;
+		}
+		else 
+		{
+			GameManagerInstance.editMode = false;
+		}
 		break;
 	case 'C':
 		break;
@@ -109,6 +139,8 @@ void GameInput::OnKeyDown(UINT keyCode, UINT repeatCount)
 		break;
 	case VK_F12:
 		break;
+
+		GameManagerInstance.PlayerInputTile(tileAxisH, tileAxisV);
 	}
 }
 

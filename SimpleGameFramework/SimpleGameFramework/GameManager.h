@@ -30,6 +30,15 @@ public:
 	 */
 	void Render(Gdiplus::Graphics& canvas, const CRect& clientRect);
 
+	void PlayerInputSmooth(int smoothAxisH, int smoothAxisV);
+	void PlayerInputTile(int tileAxisH, int tileAxisV);
+
+	Vector2i PlayerOffsetSmooth = Vector2i::Zero;
+	Vector2i PlayerOffsetTile = Vector2i::Zero;
+
+public:
+	bool editMode = false;
+
 private:
 	GameManager();
 	~GameManager();

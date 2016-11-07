@@ -20,6 +20,13 @@ public:
 		return !(*this == rhs);
 	}
 
+
+	void PlayerInputSmooth(int smoothAxisH, int smoothAxisV);
+	void PlayerInputTile(int tileAxisH, int tileAxisV);
+
+	Vector2i PlayerOffsetSmooth = Vector2i::Zero;
+	Vector2i PlayerOffsetTile = Vector2i::Zero;
+
 protected:
 	virtual void SaveAsText_Extra(std::ostream& outputStream);
 	virtual void LoadFromText_Extra(std::istream& inputStream);

@@ -264,6 +264,16 @@ void GameManager::EndPlay()
 	objects.clear();
 }
 
+void GameManager::PlayerInputSmooth(int smoothAxisH, int smoothAxisV)
+{
+	PlayerOffsetSmooth += Vector2i(smoothAxisH, smoothAxisV);
+}
+
+void GameManager::PlayerInputTile(int tileAxisH, int tileAxisV)
+{
+	PlayerOffsetTile += Vector2i(tileAxisH, tileAxisV);
+}
+
 void GameManager::Update(double deltaTime)
 {
 
@@ -277,6 +287,8 @@ void GameManager::Render(Gdiplus::Graphics& canvas, const CRect& clientRect)
 
 	canvas.ScaleTransform(0.5f, 0.5f);
 	canvas.RotateTransform(0.0f);
+	//canvas.TranslateTransform((Gdiplus::REAL)PlayerOffsetSmooth.X, (Gdiplus::REAL)PlayerOffsetSmooth.Y);
+	//canvas.TranslateTransform((Gdiplus::REAL)PlayerOffsetTile.X, (Gdiplus::REAL)PlayerOffsetTile.Y);
 
 	//Tell all of the GameObjects to render (includes children)
 	for (GameObject* objectPtr : objects)

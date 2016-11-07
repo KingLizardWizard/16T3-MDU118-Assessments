@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameObject.h"
+#include "GameManager.h"
 
 GameObject::GameObject()
 {
@@ -12,7 +13,10 @@ GameObject::~GameObject()
 
 void GameObject::Render(Gdiplus::Graphics& canvas, const CRect& clientRect)
 {
-
+	if (GameManagerInstance.editMode == false)
+	{
+		//stuff
+	}
 }
 
 void GameObject::SaveAsText(std::ostream& outputStream)
